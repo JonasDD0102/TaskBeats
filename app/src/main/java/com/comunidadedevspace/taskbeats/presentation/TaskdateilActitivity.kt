@@ -1,4 +1,4 @@
-package com.comunidadedevspace.taskbeats
+package com.comunidadedevspace.taskbeats.presentation
 
 import android.app.Activity
 import android.content.Context
@@ -11,17 +11,19 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import com.comunidadedevspace.taskbeats.R
+import com.comunidadedevspace.taskbeats.data.Task
 import com.google.android.material.snackbar.Snackbar
 
 class TaskdateilActitivity : AppCompatActivity() {
 
-    private   var task:Task? = null
+    private   var task: Task? = null
     private lateinit var btnDone : Button
 
     companion object {
        private const val TASK_DETAIL_EXTRA = "task.extra.detail"
-         fun start (context:Context, task:Task?):Intent{
-            val intent =Intent(context,TaskdateilActitivity::class.java)
+         fun start (context:Context, task: Task?):Intent{
+            val intent =Intent(context, TaskdateilActitivity::class.java)
                 .apply {
                     putExtra( TASK_DETAIL_EXTRA,task)
                 }
@@ -53,9 +55,9 @@ class TaskdateilActitivity : AppCompatActivity() {
 
               if(title.isNotEmpty() && desc.isNotEmpty()){
                   if(task == null ) {
-                      addOrUpdateTask(0,title, desc,ActionType.CREATE)
+                      addOrUpdateTask(0,title, desc, ActionType.CREATE)
                   }else{
-                      addOrUpdateTask(task!!.id,title, desc,ActionType.UPDATE)
+                      addOrUpdateTask(task!!.id,title, desc, ActionType.UPDATE)
                   }
               }else{
                   showMessage(it,"Filds are required")
@@ -75,7 +77,7 @@ class TaskdateilActitivity : AppCompatActivity() {
         description : String,
         actionType: ActionType
     ){
-        val Task =Task(id,title,description)
+        val Task = Task(id,title,description)
         returnAction(Task, actionType)
     }
 
@@ -90,7 +92,7 @@ class TaskdateilActitivity : AppCompatActivity() {
             R.id.deleti_task -> {
 
                 if(task != null) {
-                   returnAction(task!!,ActionType.DELETE)
+                   returnAction(task!!, ActionType.DELETE)
 
                 }else{
                  showMessage(btnDone,"Item not found")
@@ -101,7 +103,7 @@ class TaskdateilActitivity : AppCompatActivity() {
         }
     }
 
-    private fun returnAction(task:Task , actionType: ActionType){
+    private fun returnAction(task: Task, actionType: ActionType){
         val intent = Intent()
             .apply {
                 val taskAction = TaskAction(task, actionType.name )
