@@ -77,8 +77,8 @@ class TaskdateilActitivity : AppCompatActivity() {
         description : String,
         actionType: ActionType
     ){
-        val Task = Task(id,title,description)
-        returnAction(Task, actionType)
+        val task = Task(id,title,description)
+        returnAction(task, actionType)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
