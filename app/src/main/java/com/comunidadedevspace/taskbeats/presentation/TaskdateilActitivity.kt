@@ -1,6 +1,5 @@
 package com.comunidadedevspace.taskbeats.presentation
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -11,14 +10,22 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import androidx.activity.viewModels
 import com.comunidadedevspace.taskbeats.R
-import com.comunidadedevspace.taskbeats.data.Task
+import com.comunidadedevspace.taskbeats.data.Local.Task
 import com.google.android.material.snackbar.Snackbar
 
 class TaskdateilActitivity : AppCompatActivity() {
 
     private   var task: Task? = null
     private lateinit var btnDone : Button
+
+
+
+    private  val viewModel :TasDetailViewModel by viewModels{
+        TasDetailViewModel.getVMFactory(application)
+    }
+
 
     companion object {
        private const val TASK_DETAIL_EXTRA = "task.extra.detail"
@@ -63,12 +70,6 @@ class TaskdateilActitivity : AppCompatActivity() {
                   showMessage(it,"Filds are required")
               }
         }
-
-        // Recuperar campo do xml
-         //tvtitle = findViewById(R.id.tv_task_title_detail)
-
-        //  Setar um novo texto na tela
-       //  tvtitle.text =  task?.title ?:"Adicione uma terefa"
     }
 
     private fun addOrUpdateTask(
@@ -78,7 +79,7 @@ class TaskdateilActitivity : AppCompatActivity() {
         actionType: ActionType
     ){
         val task = Task(id,title,description)
-        returnAction(task, actionType)
+        performAction(task, actionType)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -92,7 +93,7 @@ class TaskdateilActitivity : AppCompatActivity() {
             R.id.deleti_task -> {
 
                 if(task != null) {
-                   returnAction(task!!, ActionType.DELETE)
+                   performAction(task!!, ActionType.DELETE)
 
                 }else{
                  showMessage(btnDone,"Item not found")
@@ -103,13 +104,9 @@ class TaskdateilActitivity : AppCompatActivity() {
         }
     }
 
-    private fun returnAction(task: Task, actionType: ActionType){
-        val intent = Intent()
-            .apply {
-                val taskAction = TaskAction(task, actionType.name )
-                putExtra(TASK_ACTION_RESULT, taskAction)
-            }
-        setResult(Activity.RESULT_OK, intent)
+    private fun performAction(task: Task, actionType: ActionType){
+        val taskAction = TaskAction(task, actionType.name )
+        viewModel.execute(taskAction)
         finish()
     }
     private fun showMessage(view: View, message:String){
