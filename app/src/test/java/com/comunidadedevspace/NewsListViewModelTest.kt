@@ -27,23 +27,34 @@ class NewsListViewModelTest {
         runBlocking {
 
             //GIVEN
-            val expected = listOf<NewsDto>(
+            val expectedTop = listOf<NewsDto>(
                 NewsDto(
-                    id = "big",
-                    content = "content",
-                    imageUrl = "image",
+                    id = "big1",
+                    content = "content1",
+                    imageUrl = "image1",
                     title = "title1"
                 )
             )
-            val responce = NewsResponce(data = expected, category = "tech")
-            whenever(service.fetchNews()).thenReturn(responce)
+            val expectedAll = listOf<NewsDto>(
+                NewsDto(
+                    id = "big2",
+                    content = "content2",
+                    imageUrl = "image2",
+                    title = "title2"
+                )
+            )
+
+            val topResponce = NewsResponce(data = expectedTop)
+            val allResponce = NewsResponce(data = expectedAll)
+            whenever(service.fetTopNews()).thenReturn(topResponce)
+            whenever(service.fetAllNews()).thenReturn(allResponce)
 
             //WHEN
             underTest = NewsListViewModel(service)
             val result =  underTest.newsListLiveData.getOrAwaitValue()
 
             //THEN
-            assert(result == expected)
+            assert(result == expectedTop + expectedAll)
         }
     }
 }
